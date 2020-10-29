@@ -21,3 +21,28 @@
     position: relative;
     margin: 20px auto;
 }
+
+
+.container-register {
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    top: 20%;
+}
+
+.wrapper-register {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.wrapper-register input{
+    width: 200px;
+    height: 26px;
+    border: 1px solid #cccccc;
+    background-color: #f5f5f5;
+    font-size: 18px;
+    display: block;
+    position: relative;
+    margin: 20px auto;
+}
