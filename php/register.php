@@ -7,22 +7,30 @@ register();
 function register()
 {
     global $db;
+    $dir = dirname(dirname(__FILE__));
+    if(isset($_FILES['profile']['name'])){
+        $profile=$_FILES['profile']['name'];
+        $target = $dir."/images/" . basename($profile);
+        move_uploaded_file($_FILES['profile']['tmp_name'], $target);
+    }else{
+        $profile =null;
+    }
     $data = [
         'username' => trim($_POST['username']),
         'password' => trim($_POST['password']),
         'confirmPassword' => trim($_POST['confirmPassword']),
         'email' => trim($_POST['email']),
-        'profile' => $_FILES['image']['name'],
+        'profile' =>$profile,
     ];
     $errorData = [
         'usernameError' => '',
         'passwordError' => '',
         'confirmPasswordError' => '',
-        'emailError' => '',
+        'emailError' => ''
     ];
 
     $nameValidation = "/^[a-zA-Z0-9]*$/";
-
+    
     //Validate  username on letters/numbers
 
     if (empty($data['username'])) {
@@ -67,22 +75,24 @@ function register()
         if ($db->registerUser($data)) {
             header('/commerce/pages/login');
         } else {
-            echo json_encode($errorData);
+            
             die('Something went wrong');
         }
     }
+    echo json_encode($errorData);
     
 }
+
 
 function findUserByEmail($email)
 {
     global $db;
     //Prepared statement
-    $db->query('SELECT * FROM users WHERE email = :email');
+    $db->query("SELECT * FROM `users` WHERE email = :email");
 
     //Email param will be binded with the email variable
     $db->bind(':email', $email);
-
+    $db->execute();
     //Check if email is already registered
     if ($db->rowCount() > 0) {
         return true;
