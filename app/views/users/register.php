@@ -8,20 +8,20 @@ require APPROOT . '/views/includes/navigation.php';
 <div class="container-register">
     <div class="wrapper-register">
         <h2>Sign in</h2>
-        <form  method ="POST">
+        <form method="POST">
             <input type="text" placeholder="Username *" id="username">
             <span class="invalidFeedback">
                 <?php echo $data['usernameError']; ?>
             </span>
-            <input type="text" placeholder="Password *" id="password">
+            <input type="password" placeholder="Password *" id="password">
             <span class="invalidFeedback">
                 <?php echo $data['passwordError']; ?>
             </span>
-            <input type="text" placeholder="confirmpassword *" id="confirmPassword">
+            <input type="password" placeholder="confirmpassword *" id="confirmPassword">
             <span class="invalidFeedback">
                 <?php echo $data['confirmPasswordError']; ?>
             </span>
-            <input type="password" placeholder="email *" id="email">
+            <input type="text" placeholder="email *" id="email">
             <span class="invalidFeedback">
                 <?php echo $data['emailError']; ?>
             </span>

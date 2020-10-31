@@ -7,7 +7,7 @@ class User {
         this.email = email;
     }
 
-        register(){
+    register() {
         $.ajax({
             url: approot + "\\models\\User.php",
             type: "POST",
@@ -29,7 +29,7 @@ class User {
 }
 
 $(document).on("click", "#submitRegister", function () {
-    var user = new User($('#username').val(),$('#password').val(),$('#confirmPassword').val(),$('#email').val());
+    var user = new User($('#username').val(), $('#password').val(), $('#confirmPassword').val(), $('#email').val());
     user.register();
-    console.log(user);  
+    console.log(user);
 });
