@@ -6,6 +6,7 @@ window.addEventListener('load', function () {
     }
 
 })
+
 function navbarLoader() {
     if (sessionStorage.getItem('username') == null || sessionStorage.getItem('username') == '') {
         $('body').append(navDiv);
@@ -83,7 +84,7 @@ var loggedNavDiv = `<nav class="navbar navbar-expand-lg navbar-light bg-light">
 </div>
 </nav>`
 
-var loginDiv=`<div class="container-login">
+var loginDiv = `<div class="container-login">
 <div class="wrapper-login">
     <h2>Sign in</h2>
     <form method="POST">
@@ -103,7 +104,7 @@ var loginDiv=`<div class="container-login">
 </div>
 </div>`
 
-var registerDiv=`<div class="container-register">
+var registerDiv = `<div class="container-register">
 <div class="wrapper-register">
     <h2>Sign in</h2>
     <form method="POST"> 
@@ -128,7 +129,7 @@ var registerDiv=`<div class="container-register">
 </div>
 </div>`
 
-var updateDiv=`<div class="container-register">
+var updateDiv = `<div class="container-register">
 <div class="wrapper-register">
     <h2>Update</h2>
     <form method="POST"> 
@@ -154,7 +155,7 @@ var updateDiv=`<div class="container-register">
 </div>
 </div>`
 
-var panelDiv=`<div class="container-panel" style='padding: 20px;'>
+var panelDiv = `<div class="container-panel" style='padding: 20px;'>
 <div class="wrapper-buttons d-flex justify-content-center">
     <div class="btn-group btn-group-toggle">
         <label class="btn btn-secondary">
@@ -171,7 +172,7 @@ var panelDiv=`<div class="container-panel" style='padding: 20px;'>
 
 </div>`
 
-var panelButtonsDiv=`<div id='process' class="wrapper-buttons d-flex justify-content-center" style="padding: 20px;">
+var panelButtonsDiv = `<div id='process' class="wrapper-buttons d-flex justify-content-center" style="padding: 20px;">
 <div class="btn-group btn-group-toggle">
   <label class="btn btn-secondary">
     <button class="btn btn-secondary" type="button" id="add"> Add</button>
@@ -194,7 +195,15 @@ var panelButtonsDiv=`<div id='process' class="wrapper-buttons d-flex justify-con
 <div class='listing'></div>
 </div>
 `
-
+searchDiv = `<div class="container-register">
+<div class="wrapper-register">
+    <h2>Search</h2>
+    <form method="POST"> 
+        <input type="text" placeholder="id *" id="id">
+        <button id="searchBtn" type="button" value="button" class='reg'>Search</button>
+    </form>
+</div>
+</div>`
 var table = `<table class="table">
                         <thead>
                           <tr class='scope'>
@@ -206,7 +215,7 @@ var table = `<table class="table">
                         </tbody>
                       </table>`
 
-                      var modalCreate = ` <!-- The Modal -->
+var modalCreate = ` <!-- The Modal -->
                       <div class="modal" id="myModal">
                           <div class="modal-dialog">
                               <div class="modal-content">

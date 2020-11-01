@@ -108,7 +108,7 @@ $(document).on('click', '#users', function () {
   $('.process-tab').remove()
   $('.container-panel').append(panelButtonsDiv);
   $('.listing').append(table)
-  listTable(tableName);
+  getTable(tableName);
 })
 
 $(document).on('click', '#products', function () {
@@ -117,7 +117,7 @@ $(document).on('click', '#products', function () {
   $('#process').remove();
   $('.process-tab').remove()
   $('.container-panel').append(panelButtonsDiv);
-  listTable();
+  getTable();
 })
 $(document).on('click', '#categories', function () {
   name = this.id;
@@ -125,7 +125,7 @@ $(document).on('click', '#categories', function () {
   $('#process').remove();
   $('.process-tab').remove()
   $('.container-panel').append(panelButtonsDiv);
-  listTable();
+  getTable();
 })
 
 
@@ -163,6 +163,7 @@ $(document).on('click', '#search', function () {
   switch (tableName) {
     case 'users':
       $('.inputArea').empty();
+      $('.inputArea').append(searchDiv);
       break;
     case 'products':
       break;
@@ -173,6 +174,7 @@ $(document).on('click', '#search', function () {
   }
 
 })
+
 $(document).on('click', '#delete', function () {
   switch (tableName) {
     case 'users':
@@ -187,7 +189,8 @@ $(document).on('click', '#delete', function () {
   }
 
 })
-function listTable(name) {
+
+function getTable(name) {
   $.ajax({
     url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/list.php',
     type: "POST",
@@ -196,37 +199,63 @@ function listTable(name) {
       name: name
     },
     success: function (data) {
-      data = JSON.parse(data);
-      var key = ''
-      var scopeVal = ''
-      var element = '<tr>'
-      for (let i = 0; i < data.length; i++) {
-        keyLength = Object.keys(data[i]).length
-        for (let j = 0; j < keyLength; j++) {
-          key = Object.keys(data[i])[j];
-          if (i >= 1) {} else {
-            scopeVal = scopeVal + '<th scope="col">' + key + '</th> '
-          }
-          if (key == 'profile') {
-            var imageSrc = "images/" + data[i]["profile"];
-
-            element = element + '<td><img src="' + imageSrc + '" data-toggle="modal" data-target="#myModal" onclick="modalSend(this.src)" style="width: 50px;">' + "</td>"
-          } else {
-            element = element + '<td>' + data[i][key] + '</td>';
-          }
-
-
-
-        }
-        element = element + '</tr>';
-        $('#elements').append(element);
-        element = '<tr>';
-      }
-      $('.scope').append(scopeVal);
+      listTable(data);
     }
   });
 
 }
+
+function listTable(data) {
+  data = JSON.parse(data);
+  if (data.length == undefined) {
+    dataLen = 1
+  } else {
+    dataLen = data.length;
+  }
+  console.log(data)
+  var key = ''
+  var scopeVal = ''
+  var element = '<tr>'
+  for (let i = 0; i < dataLen; i++) {
+    if (dataLen == 1) {
+      keyLength = Object.keys(data)
+    } else {
+      keyLength = Object.keys(data[i]).length
+    }
+    for (let j = 0; j < keyLength; j++) {
+      if (dataLen == 1) {
+        key = Object.keys(data)[j];
+        console.log(key);
+      } else {
+        key = Object.keys(data[i])[j];
+      }
+      console.log(i);
+      if (i <= 1) {
+        scopeVal = scopeVal + '<th scope="col">' + key + '</th> '
+      }
+      if (key == 'profile') {
+        var imageSrc = "images/" + data[i]["profile"];
+
+        element = element + '<td><img src="' + imageSrc + '" data-toggle="modal" data-target="#myModal" onclick="modalSend(this.src)" style="width: 50px;">' + "</td>"
+      } else {
+        element = element + '<td>' + data[i][key] + '</td>';
+      }
+
+
+
+    }
+    element = element + '</tr>';
+    console.log(element)
+    $('#elements').append(element);
+    element = '<tr>';
+  }
+  $('.scope').append(scopeVal);
+  console.log(scopeVal)
+
+
+}
+
+
 
 function modalSend(_src) {
   $('body').append(modalCreate);
@@ -247,8 +276,8 @@ $(document).on("click", "#submitUpdate", function () {
   var passwordVal = $("#password").val();
   var confirmVal = $("#confirmPassword").val();
   var emailVal = $("#email").val();
-  fd.append('id',idVal)
-  fd.append('update',true)
+  fd.append('id', idVal)
+  fd.append('update', true)
   fd.append("username", usernameVal);
   fd.append("password", passwordVal);
   fd.append("confirmPassword", confirmVal);
@@ -274,6 +303,25 @@ $(document).on("click", "#submitUpdate", function () {
         console.log(data)
       }
 
+    }
+  });
+})
+
+$(document).on('click', '#searchBtn', function () {
+  var fd = new FormData();
+  var idVal = $("#id").val();
+  fd.append('id', idVal);
+  fd.append('tableName', tableName);
+  $.ajax({
+    url: "/e-Commerce/e-Commerce-first-MVC-tutorial-/php/search.php",
+    type: "POST",
+    dataType: "text",
+    data: fd,
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      $('.table').empty()
+      listTable(data);
     }
   });
 })
