@@ -1,4 +1,3 @@
-$('body').append()
 $(document).on("click", "#submitRegister", function () {
   var fd = new FormData();
   var image = $("#image")[0].files[0]
@@ -13,28 +12,19 @@ $(document).on("click", "#submitRegister", function () {
   fd.append("profile", image);
 
   $.ajax({
-      url: "/e-Commerce/e-Commerce-first-MVC-tutorial-/php/register.php",
-      type: "POST",
-      dataType: "text",
-      data: fd,
-      processData: false,
-      contentType: false,
-      success: function (data) {
-        try {
-          data = JSON.parse(data);
-          $('.invalidNameFeedback').append(data['usernameError']);
-          $('.invalidPasswordFeedback').append(data['passwordError']);
-          $('.invalidConfirmFeedback').append(data['confirmPasswordError']);
-          $('.invalidEmailFeedback').append(data['emailError']);
-          if (
-            (data['usernameError'] == '') && empty(data['passwordError'] == '') &&
-            (data['confirmPasswordError'] == '') && (data['emailError'] == '')
-          ) {
-            window.location('/e-Commerce/e-Commerce-first-MVC-tutorial-/pages/login')
-          }
-
-        
-
+    url: "/e-Commerce/e-Commerce-first-MVC-tutorial-/php/register.php",
+    type: "POST",
+    dataType: "text",
+    data: fd,
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      try {
+        data = JSON.parse(data);
+        $('.invalidNameFeedback').append(data['usernameError']);
+        $('.invalidPasswordFeedback').append(data['passwordError']);
+        $('.invalidConfirmFeedback').append(data['confirmPasswordError']);
+        $('.invalidEmailFeedback').append(data['emailError']);
       } catch (e) {
         console.log(data)
       }
@@ -58,13 +48,20 @@ $(document).on("click", "#submitLogin", function () {
     processData: false,
     contentType: false,
     success: function (data) {
-     
+
       try {
         data = JSON.parse(data);
         $('.invalidNameFeedback').append(data['usernameError']);
         $('.invalidPasswordFeedback').append(data['passwordError']);
-        localStorage.setItem('username',data['username']);
-        localStorage.setItem('email',data['email']);
+        if(data[username]==''){
+          console.log('something wrong')
+        }else{
+          sessionStorage.setItem('username',data['username'])
+          sessionStorage.setItem('email',data['email']);
+          location.reload();
+          return false;
+        }
+        
         console.log(data)
       } catch (e) {
         //console.log(data)
@@ -72,5 +69,24 @@ $(document).on("click", "#submitLogin", function () {
 
     }
   });
+})
+$(document).on('click', '#registerDiv',function(){
+  $('body').empty();
+  navbarLoader();
+  $('body').append(registerDiv);
+})
+
+
+$(document).on('click', '#loginDiv',function(){
+  $('body').empty();
+  navbarLoader();
+  $('body').append(loginDiv);
+})
+$(document).on('click', '#logoutBtn',function(){
+  $('body').empty();
+  navbarLoader();
+  sessionStorage.clear();
+  location.reload();
+  return false;
 })
 
