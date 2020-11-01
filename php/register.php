@@ -16,6 +16,7 @@ function register()
         $profile =null;
     }
     $data = [
+        'id'=>trim($_POST['id']),
         'username' => trim($_POST['username']),
         'password' => trim($_POST['password']),
         'confirmPassword' => trim($_POST['confirmPassword']),
@@ -72,12 +73,22 @@ function register()
     ) {
         //Hash password  
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-        if ($db->registerUser($data)) {
-            header('/commerce/pages/login');
-        } else {
-            
-            die('Something went wrong');
+        if ($_POST['update']) {
+            if ($db->updateUser($data)) {
+                header('/commerce/pages/login');
+            } else {
+                
+                die('Something went wrong');
+            }
+        }else{
+            if ($db->registerUser($data)) {
+                header('/commerce/pages/login');
+            } else {
+                
+                die('Something went wrong');
+            }
         }
+        
     }
     echo json_encode($errorData);
     

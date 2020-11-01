@@ -96,7 +96,6 @@ class Database
             return $e->getMessage();
         }
     }
-
     public function login($username, $password)
     {
 
@@ -116,6 +115,24 @@ class Database
             return $row;
         } else {
             return false;
+        }
+    }
+    public function updateUser($data)
+    {
+        try {
+            $this->query("UPDATE `users` SET `username` = :username , `password`=:password, `email`=:email ,`profile`= :profile WHERE `users`.`id` = :id");
+
+            //Bind values
+            $this->bind(':id', $data['id']);
+            $this->bind(':username', $data['username']);
+            $this->bind(':email', $data['email']);
+            $this->bind(':password', $data['password']);
+            $this->bind(':profile', $data['profile']);
+            //Execute function
+            $this->execute();
+            return true;
+        } catch (PDOException $e) {
+            return $e->getMessage();
         }
     }
 }
