@@ -25,8 +25,7 @@ $(document).on("click", "#submitRegister", function () {
         $('.invalidPasswordFeedback').append(data['passwordError']);
         $('.invalidConfirmFeedback').append(data['confirmPasswordError']);
         $('.invalidEmailFeedback').append(data['emailError']);
-        location.reload();
-        return false;
+        $('#loginDiv').trigger('click');
       } catch (e) {
         console.log(data)
       }
@@ -112,7 +111,7 @@ $(document).on('click', '#users', function () {
 })
 
 $(document).on('click', '#products', function () {
-  name = this.id;
+  tableName = this.id;
   console.log(name);
   $('#process').remove();
   $('.process-tab').remove()
@@ -120,7 +119,7 @@ $(document).on('click', '#products', function () {
   getTable();
 })
 $(document).on('click', '#categories', function () {
-  name = this.id;
+  tableName = this.id;
   console.log(name);
   $('#process').remove();
   $('.process-tab').remove()
@@ -136,8 +135,12 @@ $(document).on('click', '#add', function () {
       $('.inputArea').append(registerDiv);
       break;
     case 'products':
+      $('.inputArea').empty();
+      $('.inputArea').append(addProductDiv);
       break;
     case 'categories':
+      $('.inputArea').empty();
+      $('.inputArea').append(addCategoryDiv);
       break;
     default:
       break;
@@ -160,33 +163,14 @@ $(document).on('click', '#update', function () {
 
 })
 $(document).on('click', '#search', function () {
-  switch (tableName) {
-    case 'users':
-      $('.inputArea').empty();
-      $('.inputArea').append(searchDiv);
-      break;
-    case 'products':
-      break;
-    case 'categories':
-      break;
-    default:
-      break;
-  }
+  $('.inputArea').empty();
+  $('.inputArea').append(searchDiv);
 
 })
 
 $(document).on('click', '#delete', function () {
-  switch (tableName) {
-    case 'users':
-      $('.inputArea').empty();
-      break;
-    case 'products':
-      break;
-    case 'categories':
-      break;
-    default:
-      break;
-  }
+  $('.inputArea').empty();
+  $('.inputArea').append(deleteDiv);
 
 })
 
@@ -218,27 +202,41 @@ function listTable(data) {
   var element = '<tr>'
   for (let i = 0; i < dataLen; i++) {
     if (dataLen == 1) {
-      keyLength = Object.keys(data)
+      keyLength = Object.keys(data).length;
+      console.log(keyLength)
     } else {
       keyLength = Object.keys(data[i]).length
     }
     for (let j = 0; j < keyLength; j++) {
       if (dataLen == 1) {
-        key = Object.keys(data)[j];
+        key = (Object.keys(data))[j];
         console.log(key);
       } else {
         key = Object.keys(data[i])[j];
       }
       console.log(i);
-      if (i <= 1) {
+      if (i < 1) {
         scopeVal = scopeVal + '<th scope="col">' + key + '</th> '
       }
-      if (key == 'profile') {
-        var imageSrc = "images/" + data[i]["profile"];
+      if (dataLen == 1) {
+        if (key == 'profile') {
+          var imageSrc = "images/" + data["profile"];
 
-        element = element + '<td><img src="' + imageSrc + '" data-toggle="modal" data-target="#myModal" onclick="modalSend(this.src)" style="width: 50px;">' + "</td>"
+          element = element + '<td><img src="' + imageSrc + '" data-toggle="modal" data-target="#myModal" onclick="modalSend(this.src)" style="width: 50px;">' + "</td>"
+        } else {
+          element = element + '<td>' + data[key] + '</td>';
+        }
+
+
       } else {
-        element = element + '<td>' + data[i][key] + '</td>';
+        if (key == 'profile') {
+          var imageSrc = "images/" + data[i]["profile"];
+
+          element = element + '<td><img src="' + imageSrc + '" data-toggle="modal" data-target="#myModal" onclick="modalSend(this.src)" style="width: 50px;">' + "</td>"
+        } else {
+          element = element + '<td>' + data[i][key] + '</td>';
+        }
+
       }
 
 
@@ -297,8 +295,7 @@ $(document).on("click", "#submitUpdate", function () {
         $('.invalidPasswordFeedback').append(data['passwordError']);
         $('.invalidConfirmFeedback').append(data['confirmPasswordError']);
         $('.invalidEmailFeedback').append(data['emailError']);
-        location.reload();
-        return false;
+        $('#users').trigger('click');
       } catch (e) {
         console.log(data)
       }
@@ -320,8 +317,88 @@ $(document).on('click', '#searchBtn', function () {
     processData: false,
     contentType: false,
     success: function (data) {
-      $('.table').empty()
+      $('.listing').empty()
+      $('.listing').append(table)
       listTable(data);
+    }
+  });
+})
+
+$(document).on('click', '#deleteBtn', function () {
+  var fd = new FormData();
+  var idVal = $("#id").val();
+  fd.append('id', idVal);
+  fd.append('tableName', tableName);
+  $.ajax({
+    url: "/e-Commerce/e-Commerce-first-MVC-tutorial-/php/delete.php",
+    type: "POST",
+    dataType: "text",
+    data: fd,
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      window.alert(data);
+      location.reload();
+      return false;
+    }
+  });
+})
+
+$(document).on("click", "#submitRegister", function () {
+  var fd = new FormData();
+  var image = $("#image")[0].files[0]
+  var usernameVal = $("#username").val();
+  var passwordVal = $("#password").val();
+  var confirmVal = $("#confirmPassword").val();
+  var emailVal = $("#email").val();
+  fd.append("username", usernameVal);
+  fd.append("password", passwordVal);
+  fd.append("confirmPassword", confirmVal);
+  fd.append("email", emailVal);
+  fd.append("profile", image);
+
+  $.ajax({
+    url: "/e-Commerce/e-Commerce-first-MVC-tutorial-/php/register.php",
+    type: "POST",
+    dataType: "text",
+    data: fd,
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      try {
+        data = JSON.parse(data);
+        $('.invalidNameFeedback').append(data['usernameError']);
+        $('.invalidPasswordFeedback').append(data['passwordError']);
+        $('.invalidConfirmFeedback').append(data['confirmPasswordError']);
+        $('.invalidEmailFeedback').append(data['emailError']);
+        location.reload();
+        return false;
+      } catch (e) {
+        console.log(data)
+      }
+
+    }
+  });
+})
+
+
+$(document).on("click", "#addCategory", function () {
+  var fd = new FormData();
+  var categoryName = $("#category_Name").val();
+  var descriptionVal = $("#description").val();
+  fd.append("name", categoryName);
+  fd.append("description", descriptionVal);
+  console.log('Worked')
+  $.ajax({
+    url: "/e-Commerce/e-Commerce-first-MVC-tutorial-/php/Category.php",
+    type: "POST",
+    dataType: "text",
+    data: fd,
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      console.log('Worked')
+      $('#categories').trigger('click');
     }
   });
 })

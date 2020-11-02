@@ -172,19 +172,49 @@ var panelDiv = `<div class="container-panel" style='padding: 20px;'>
 
 </div>`
 
+var addProductDiv=`<div class="container-register">
+<div class="wrapper-register">
+    <h2>Add Product</h2>
+    <form method="POST"> 
+        
+        <input type="text" placeholder="Product Name" id="product">
+        <input type="text" placeholder="description" id="product_desc">
+        <input type="text" placeholder="Sale" id="product_sale">
+        <input type="text" placeholder="stock *" id="stock">
+        <p>Product Image</p>
+        <input type="file" class="form-control" id="image" style="font-size: 14px;">
+        <button id="addProduct" type="button" value="submit" class='reg'>Submit</button>
+    </form>
+</div>
+</div>`
+
+
+var addCategoryDiv=`<div class="container-register">
+<div class="wrapper-register">
+    <h2>Add Category</h2>
+    <form method="POST"> 
+        
+        <input type="text" placeholder="Category Name" id="category_Name">
+        <input type="text" placeholder="description" id="description">
+        <button id="addCategory" type="button" value="submit" class='reg'>Submit</button>
+    </form>
+</div>
+</div>`
+
+
 var panelButtonsDiv = `<div id='process' class="wrapper-buttons d-flex justify-content-center" style="padding: 20px;">
 <div class="btn-group btn-group-toggle">
   <label class="btn btn-secondary">
-    <button class="btn btn-secondary" type="button" id="add"> Add</button>
+    <button class="btn btn-secondary" type="button" id="add">Add</button>
   </label>
   <label class="btn btn-secondary">
-    <button class="btn btn-secondary" type="button" id="update"> Update</button>
+    <button class="btn btn-secondary" type="button" id="update">Update</button>
   </label>
   <label class="btn btn-secondary">
     <button class="btn btn-secondary" type="button" id="search">Search</button>
   </label>
   <label class="btn btn-secondary">
-    <button class="btn btn-secondary" type="button" id="delete"> Delete</button>
+    <button class="btn btn-secondary" type="button" id="delete">Delete</button>
   </label>
 </div>
 
@@ -201,6 +231,16 @@ searchDiv = `<div class="container-register">
     <form method="POST"> 
         <input type="text" placeholder="id *" id="id">
         <button id="searchBtn" type="button" value="button" class='reg'>Search</button>
+    </form>
+</div>
+</div>`
+
+deleteDiv = `<div class="container-register">
+<div class="wrapper-register">
+    <h2>Delete</h2>
+    <form method="POST"> 
+        <input type="text" placeholder="id *" id="id">
+        <button id="deleteBtn" type="button" value="button" class='reg'>Search</button>
     </form>
 </div>
 </div>`
