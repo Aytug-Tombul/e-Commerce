@@ -179,10 +179,15 @@ var addProductDiv=`<div class="container-register">
         
         <input type="text" placeholder="Product Name" id="product">
         <input type="text" placeholder="description" id="product_desc">
+        <input type="text" placeholder="Price *" id="price">
         <input type="text" placeholder="Sale" id="product_sale">
         <input type="text" placeholder="stock *" id="stock">
         <p>Product Image</p>
         <input type="file" class="form-control" id="image" style="font-size: 14px;">
+        <p>Product Category</p>
+        <select id="selectCategories" name="category">
+            
+        </select>
         <button id="addProduct" type="button" value="submit" class='reg'>Submit</button>
     </form>
 </div>
@@ -200,6 +205,19 @@ var addCategoryDiv=`<div class="container-register">
     </form>
 </div>
 </div>`
+
+var updateCategoryDiv=`<div class="container-register">
+<div class="wrapper-register">
+    <h2>Add Category</h2>
+    <form method="POST"> 
+        <input type="text" placeholder="Category ID" id="catID">
+        <input type="text" placeholder="Category Name" id="category_Name">
+        <input type="text" placeholder="description" id="description">
+        <button id="updateCategory" type="button" value="submit" class='reg'>Submit</button>
+    </form>
+</div>
+</div>`
+
 
 
 var panelButtonsDiv = `<div id='process' class="wrapper-buttons d-flex justify-content-center" style="padding: 20px;">

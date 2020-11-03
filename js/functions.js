@@ -112,19 +112,19 @@ $(document).on('click', '#users', function () {
 
 $(document).on('click', '#products', function () {
   tableName = this.id;
-  console.log(name);
   $('#process').remove();
   $('.process-tab').remove()
   $('.container-panel').append(panelButtonsDiv);
-  getTable();
+  $('.listing').append(table)
+  getTable(tableName);
 })
 $(document).on('click', '#categories', function () {
   tableName = this.id;
-  console.log(name);
   $('#process').remove();
   $('.process-tab').remove()
   $('.container-panel').append(panelButtonsDiv);
-  getTable();
+  $('.listing').append(table)
+  getTable(tableName);
 })
 
 
@@ -137,6 +137,7 @@ $(document).on('click', '#add', function () {
     case 'products':
       $('.inputArea').empty();
       $('.inputArea').append(addProductDiv);
+      selectCategories();
       break;
     case 'categories':
       $('.inputArea').empty();
@@ -156,6 +157,8 @@ $(document).on('click', '#update', function () {
     case 'products':
       break;
     case 'categories':
+      $('.inputArea').empty();
+      $('.inputArea').append(updateCategoryDiv);
       break;
     default:
       break;
@@ -184,6 +187,7 @@ function getTable(name) {
     },
     success: function (data) {
       listTable(data);
+      return data;
     }
   });
 
@@ -196,25 +200,22 @@ function listTable(data) {
   } else {
     dataLen = data.length;
   }
-  console.log(data)
   var key = ''
   var scopeVal = ''
   var element = '<tr>'
   for (let i = 0; i < dataLen; i++) {
     if (dataLen == 1) {
       keyLength = Object.keys(data).length;
-      console.log(keyLength)
     } else {
       keyLength = Object.keys(data[i]).length
     }
     for (let j = 0; j < keyLength; j++) {
       if (dataLen == 1) {
-        key = (Object.keys(data))[j];
-        console.log(key);
+        key = Object.keys(data)[j];
       } else {
         key = Object.keys(data[i])[j];
       }
-      console.log(i);
+
       if (i < 1) {
         scopeVal = scopeVal + '<th scope="col">' + key + '</th> '
       }
@@ -243,12 +244,10 @@ function listTable(data) {
 
     }
     element = element + '</tr>';
-    console.log(element)
     $('#elements').append(element);
     element = '<tr>';
   }
   $('.scope').append(scopeVal);
-  console.log(scopeVal)
 
 
 }
@@ -338,8 +337,8 @@ $(document).on('click', '#deleteBtn', function () {
     contentType: false,
     success: function (data) {
       window.alert(data);
-      location.reload();
-      return false;
+      $('#'+tableName).trigger('click');
+
     }
   });
 })
@@ -386,9 +385,9 @@ $(document).on("click", "#addCategory", function () {
   var fd = new FormData();
   var categoryName = $("#category_Name").val();
   var descriptionVal = $("#description").val();
+  fd.append("functionCall",'add');
   fd.append("name", categoryName);
   fd.append("description", descriptionVal);
-  console.log('Worked')
   $.ajax({
     url: "/e-Commerce/e-Commerce-first-MVC-tutorial-/php/Category.php",
     type: "POST",
@@ -397,8 +396,89 @@ $(document).on("click", "#addCategory", function () {
     processData: false,
     contentType: false,
     success: function (data) {
-      console.log('Worked')
+      console.log(data);
       $('#categories').trigger('click');
+    }
+  });
+})
+$(document).on("click", "#updateCategory", function () {
+  var fd = new FormData();
+  var catID=$('#catID').val();
+  var categoryName = $("#category_Name").val();
+  var descriptionVal = $("#description").val();
+  fd.append("functionCall",'update');
+  fd.append("catID", catID);
+  fd.append("name", categoryName);
+  fd.append("description", descriptionVal);
+  $.ajax({
+    url: "/e-Commerce/e-Commerce-first-MVC-tutorial-/php/Category.php",
+    type: "POST",
+    dataType: "text",
+    data: fd,
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      console.log(data);
+      $('#categories').trigger('click');
+    }
+  });
+})
+
+
+
+function selectCategories(){
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/list.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      name: 'categories'
+    },
+    success: function (data) {
+      var options=''
+      data=JSON.parse(data)
+      data.forEach(element => {
+        option= '<option value="'+element.name+'">'+element.name+'</option>'
+        options=options+option;
+      });
+      $('#selectCategories').append(options);
+    }
+  });
+
+}
+
+$(document).on("click", "#addProduct", function () {
+  var fd = new FormData();
+  var image = $("#image")[0].files[0]
+  var productName = $("#product").val();
+  var descriptionVal = $("#product_desc").val();
+  var sale = $("#product_sale").val();
+  var priceVal = $("#price").val();
+  var stock = $("#stock").val();
+  var productCategory = $("#selectCategories").val();
+  fd.append('functionCall','add')
+  fd.append("productName", productName);
+  fd.append("description", descriptionVal);
+  fd.append("price", priceVal);
+  fd.append("sale", sale);
+  fd.append("stock", stock);
+  fd.append("profile", image);
+  fd.append("productCategory", productCategory);
+
+  $.ajax({
+    url: "/e-Commerce/e-Commerce-first-MVC-tutorial-/php/Product.php",
+    type: "POST",
+    dataType: "text",
+    data: fd,
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      try {
+        $('#products').trigger('click');
+      } catch (e) {
+        console.log(data)
+      }
+
     }
   });
 })
