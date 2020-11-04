@@ -14,3 +14,5 @@ function listVal()
     $row = $db->resultSet();
     echo json_encode($row);
 }
+
+

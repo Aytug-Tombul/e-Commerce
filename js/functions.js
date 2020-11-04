@@ -155,6 +155,9 @@ $(document).on('click', '#update', function () {
       $('.inputArea').append(updateDiv);
       break;
     case 'products':
+      $('.inputArea').empty();
+      $('.inputArea').append(updateProductDiv);
+      selectCategories();
       break;
     case 'categories':
       $('.inputArea').empty();
@@ -337,7 +340,7 @@ $(document).on('click', '#deleteBtn', function () {
     contentType: false,
     success: function (data) {
       window.alert(data);
-      $('#'+tableName).trigger('click');
+      $('#' + tableName).trigger('click');
 
     }
   });
@@ -385,7 +388,7 @@ $(document).on("click", "#addCategory", function () {
   var fd = new FormData();
   var categoryName = $("#category_Name").val();
   var descriptionVal = $("#description").val();
-  fd.append("functionCall",'add');
+  fd.append("functionCall", 'add');
   fd.append("name", categoryName);
   fd.append("description", descriptionVal);
   $.ajax({
@@ -403,10 +406,10 @@ $(document).on("click", "#addCategory", function () {
 })
 $(document).on("click", "#updateCategory", function () {
   var fd = new FormData();
-  var catID=$('#catID').val();
+  var catID = $('#catID').val();
   var categoryName = $("#category_Name").val();
   var descriptionVal = $("#description").val();
-  fd.append("functionCall",'update');
+  fd.append("functionCall", 'update');
   fd.append("catID", catID);
   fd.append("name", categoryName);
   fd.append("description", descriptionVal);
@@ -426,7 +429,7 @@ $(document).on("click", "#updateCategory", function () {
 
 
 
-function selectCategories(){
+function selectCategories() {
   $.ajax({
     url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/list.php',
     type: "POST",
@@ -435,11 +438,11 @@ function selectCategories(){
       name: 'categories'
     },
     success: function (data) {
-      var options=''
-      data=JSON.parse(data)
+      var options = ''
+      data = JSON.parse(data)
       data.forEach(element => {
-        option= '<option value="'+element.name+'">'+element.name+'</option>'
-        options=options+option;
+        option = '<option value="' + element.name + '">' + element.name + '</option>'
+        options = options + option;
       });
       $('#selectCategories').append(options);
     }
@@ -456,7 +459,7 @@ $(document).on("click", "#addProduct", function () {
   var priceVal = $("#price").val();
   var stock = $("#stock").val();
   var productCategory = $("#selectCategories").val();
-  fd.append('functionCall','add')
+  fd.append('functionCall', 'add')
   fd.append("productName", productName);
   fd.append("description", descriptionVal);
   fd.append("price", priceVal);
@@ -474,11 +477,132 @@ $(document).on("click", "#addProduct", function () {
     contentType: false,
     success: function (data) {
       try {
+        //$('#products').trigger('click');
+        console.log(data)
+      } catch (e) {
+        console.log(data)
+      }
+
+    }
+  });
+})
+
+$(document).on("click", "#updateProduct", function () {
+  var fd = new FormData();
+  var id = $("#productID").val();
+  var image = $("#image")[0].files[0]
+  var productName = $("#product").val();
+  var descriptionVal = $("#product_desc").val();
+  var sale = $("#product_sale").val();
+  var priceVal = $("#price").val();
+  var stock = $("#stock").val();
+  var productCategory = $("#selectCategories").val();
+  fd.append('functionCall', 'update')
+  fd.append("id", id);
+  fd.append("productName", productName);
+  fd.append("description", descriptionVal);
+  fd.append("price", priceVal);
+  fd.append("sale", sale);
+  fd.append("stock", stock);
+  fd.append("profile", image);
+  fd.append("productCategory", productCategory);
+
+  $.ajax({
+    url: "/e-Commerce/e-Commerce-first-MVC-tutorial-/php/Product.php",
+    type: "POST",
+    dataType: "text",
+    data: fd,
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      try {
+        console.log(data);
         $('#products').trigger('click');
       } catch (e) {
         console.log(data)
       }
 
+    }
+  });
+})
+
+function getCategories() {
+  $('body').empty();
+  navbarLoader();
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/list.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      name: 'categories'
+    },
+    success: function (data) {
+      data = JSON.parse(data);
+      var cards = '';
+      $('body').append(cardDiv);
+      data.forEach(element => {
+        card = `<div class="card" id='` + element.name + `'>` +
+          `<div class="card-header">` + element.name + `</div>
+        <div class="card-body">
+        <h5 class="card-title">` + element.description + `</h5>
+        <a id="goCategory" class="btn btn-primary">Go Category</a> </div>
+        </div>`
+        cards = cards + card
+
+      });
+      $('.card-columns').append(cards);
+    }
+  });
+}
+$(document).on('click', '#goCategory', function () {
+  $('body').empty();
+  navbarLoader();
+  var categoryName = $(this).parent().parent().prop('id')
+  console.log(categoryName);
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/listProducts.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      name: categoryName
+    },
+    success: function (data) {
+      data = JSON.parse(data);
+      $('body').append(cardDiv);
+      var cards=''
+      data.forEach(element => {
+        card=`
+        <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src='images/`+element.profile+`' alt="Card image cap" style=' width:100%;
+        height: 230px;'>
+        <div class="card-body">
+          <h5 class="card-title">`+element.name+`</h5>
+          <p class="card-text">`+element.description+`</p>
+          <a class="btn btn-primary" id=goProduct>Go product</a>
+        </div>
+      </div>`
+      cards=cards+card
+      });
+      $('.card-columns').append(cards)
+    }
+  });
+})
+
+$(document).on('click', '#goProduct', function () {
+  $('body').empty();
+  navbarLoader();
+  var productName = $(this).parent().children('h5').text();
+  console.log(productName);
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/listProducts.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      name: productName
+    },
+    success: function (data) {
+      data = JSON.parse(data);
+      $('body').append(productDiv);
     }
   });
 })

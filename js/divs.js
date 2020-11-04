@@ -25,15 +25,8 @@ var navDiv = `<nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="nav-link">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link">Categories</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" >Deals</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" >About</a>
-        </li>
-
+            <a class="nav-link" onclick='getCategories()'>Categories</a>
+        </li> 
     </ul>
     <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
         <li class="nav-item">
@@ -56,13 +49,7 @@ var loggedNavDiv = `<nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="nav-link">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link">Categories</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link">Deals</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link">About</a>
+            <a class="nav-link" onclick='getCategories()'>Categories</a>
         </li>
 
     </ul>
@@ -172,7 +159,7 @@ var panelDiv = `<div class="container-panel" style='padding: 20px;'>
 
 </div>`
 
-var addProductDiv=`<div class="container-register">
+var addProductDiv = `<div class="container-register">
 <div class="wrapper-register">
     <h2>Add Product</h2>
     <form method="POST"> 
@@ -194,7 +181,28 @@ var addProductDiv=`<div class="container-register">
 </div>`
 
 
-var addCategoryDiv=`<div class="container-register">
+var updateProductDiv = `<div class="container-register">
+<div class="wrapper-register">
+    <h2>Update Product</h2>
+    <form method="POST"> 
+        <input type="text" placeholder="Product ID" id="productID">
+        <input type="text" placeholder="Product Name" id="product">
+        <input type="text" placeholder="description" id="product_desc">
+        <input type="text" placeholder="Price *" id="price">
+        <input type="text" placeholder="Sale" id="product_sale">
+        <input type="text" placeholder="stock *" id="stock">
+        <p>Product Image</p>
+        <input type="file" class="form-control" id="image" style="font-size: 14px;">
+        <p>Product Category</p>
+        <select id="selectCategories" name="category">
+            
+        </select>
+        <button id="updateProduct" type="button" value="submit" class='reg'>Submit</button>
+    </form>
+</div>
+</div>`
+
+var addCategoryDiv = `<div class="container-register">
 <div class="wrapper-register">
     <h2>Add Category</h2>
     <form method="POST"> 
@@ -206,7 +214,7 @@ var addCategoryDiv=`<div class="container-register">
 </div>
 </div>`
 
-var updateCategoryDiv=`<div class="container-register">
+var updateCategoryDiv = `<div class="container-register">
 <div class="wrapper-register">
     <h2>Add Category</h2>
     <form method="POST"> 
@@ -288,3 +296,45 @@ var modalCreate = ` <!-- The Modal -->
                               </div>
                           </div>
                       </div>`;
+
+
+
+
+var cardDiv = `<div class="card-columns">
+
+</div>`
+
+
+var productDiv = `<div id="productDetails" style='margin :100px'>
+<div id='product'>
+<img src="images/panda.jpg" alt="panda" class="img-thumbnail"class='col-4'>
+<div id='details' class='col-8'>
+<p>Name:</p>
+<p>Description:</p>
+<p>Price:</p>
+<p>Rate:</p>
+<p>Sale:</p>
+<p>Total Price:</p>
+<p>Stock:</p>
+<div class='row'>
+<p>Quantity:</p>
+
+<select id="selectQuantity" name="quantity" style='margin-left : 20px'>
+            
+</select>
+<div class='ml-auto' id='rate'>
+<select id="rates" name="rate" style='margin-left : 20px'>
+<option value='1'>1</option>
+<option value='2'>2</option>
+<option value='3'>3</option>
+<option value='4'>4</option>
+<option value='5'>5</option>
+</select>
+<button id='vote' type="button" class="btn btn-danger">Vote</button>        
+</div>
+
+</div>
+<button id='buyProduct' type="button" class="btn btn-danger">Buy</button>
+</div>
+</div>
+</div>`
