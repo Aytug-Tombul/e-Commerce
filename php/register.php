@@ -75,14 +75,13 @@ function register()
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         if ($_POST['update']) {
             if ($db->updateUser($data)) {
-                header('/commerce/pages/login');
+
             } else {
                 
                 die('Something went wrong');
             }
         }else{
             if ($db->registerUser($data)) {
-                header('/commerce/pages/login');
             } else {
                 
                 die('Something went wrong');

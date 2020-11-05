@@ -33,16 +33,17 @@ function addProduct()
         $data = [
             'name' => $_POST['productName'],
             'description' => $_POST['description'],
-            'price'=>$_POST['price'],
+            'price' => $_POST['price'],
             'sale' => $_POST['sale'],
             'stock' => $_POST['stock'],
             'profile' => $profile,
-            'category' => $_POST['productCategory']
+            'category' => trim($_POST['productCategory'])
         ];
 
-        $db->query("SELECT `id` FROM `categories` WHERE name =:category");
+        $db->query("SELECT `id` FROM `categories` WHERE name = :category ");
         $db->bind(':category', $data['category']);
-        $cateID = $db->execute();
+        $cateID = $db->single();
+
 
         $db->query("INSERT INTO `products` (name,description,price,stock,sale,category_ID,profile)
         VALUES(:name,:description,:price,:stock,:sale,:categoryID,:profile);
@@ -54,20 +55,24 @@ function addProduct()
         $db->bind(':price', $data['price']);
         $db->bind(':stock', $data['stock']);
         $db->bind(':sale', $data['sale']);
-        $db->bind(':categoryID', $cateID);
+        $db->bind(':categoryID', $cateID->id);
         $db->bind(':profile', $data['profile']);
-        $id=$db->execute();
-        echo $id;
+        $db->execute();
+
+        $db->query("SELECT `id` FROM `products` WHERE name =:name AND description=:description");
+        $db->bind(':name', $data['name']);
+        $db->bind(':description', $data['description']);
+        $id = $db->single();
 
 
-        $db->query("INSERT INTO `rates` (product_id,rate) VALUES(:product_id,:rate);
-        ");
+        $db->query("INSERT INTO `rates` (product_id,category_id,rate) VALUES(:product_id,:categoryID,:rate)");
 
-        $db->bind(':product_id',$id);
+        $db->bind(':product_id', $id->id);
+        $db->bind(':categoryID', $cateID->id);
         $db->bind(':rate', '0');
         //Execute function
         $db->execute();
-        
+
 
         //return true;
     } catch (PDOException $e) {
@@ -90,10 +95,10 @@ function updateProduct()
             $profile = null;
         }
         $data = [
-            'id'=>$_POST['id'],
+            'id' => $_POST['id'],
             'name' => $_POST['productName'],
             'description' => $_POST['description'],
-            'price'=>$_POST['price'],
+            'price' => $_POST['price'],
             'sale' => $_POST['sale'],
             'stock' => $_POST['stock'],
             'profile' => $profile,

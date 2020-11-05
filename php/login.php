@@ -13,6 +13,7 @@ function login()
         'password' => trim($_POST['password']),
     ];
     $backData = [
+        'id'=>'',
         'username'=>'',
         'email'=>'',
         'usernameError' => '',
@@ -34,6 +35,7 @@ function login()
         if ($loggedInUser) {
             $backData['username']=$loggedInUser->username;
             $backData['email']=$loggedInUser->email;
+            $backData['id']=$loggedInUser->id;
         } else {
             $backData['passwordError'] = 'Password or username is incorrect. Please try again.';
             

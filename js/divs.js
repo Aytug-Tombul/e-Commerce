@@ -337,4 +337,10 @@ var productDiv = `<div id="productDetails" style='margin :100px'>
 <button id='buyProduct' type="button" class="btn btn-danger">Buy</button>
 </div>
 </div>
-</div>`
+</div>
+<div id='commentsArea'>
+<div id='comments'>
+</div>
+<div id='sendComment'></div>
+</div>
+`

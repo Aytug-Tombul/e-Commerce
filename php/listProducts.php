@@ -12,9 +12,9 @@ function listProduct()
     
     $db->query('SELECT id FROM categories WHERE name =:category_name');
     $db->bind(':category_name',$category_name);
-    $cate_id=$db->execute();
+    $cate_id=$db->single();
     $db->query('SELECT * FROM products WHERE category_ID=:cat_id');
-    $db->bind(':cat_id',$cate_id);
+    $db->bind(':cat_id',$cate_id->id);
     $data=$db->resultSet();
     echo json_encode($data);
 }

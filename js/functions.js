@@ -27,7 +27,6 @@ $(document).on("click", "#submitRegister", function () {
         $('.invalidEmailFeedback').append(data['emailError']);
         $('#loginDiv').trigger('click');
       } catch (e) {
-        console.log(data)
       }
 
     }
@@ -55,15 +54,16 @@ $(document).on("click", "#submitLogin", function () {
         $('.invalidNameFeedback').append(data['usernameError']);
         $('.invalidPasswordFeedback').append(data['passwordError']);
         if (data[username] == '') {
-          console.log('something wrong')
+
         } else {
+          sessionStorage.setItem('id', data['id'])
           sessionStorage.setItem('username', data['username'])
           sessionStorage.setItem('email', data['email']);
           location.reload();
           return false;
         }
 
-        console.log(data)
+
       } catch (e) {
         //console.log(data)
       }
@@ -299,7 +299,7 @@ $(document).on("click", "#submitUpdate", function () {
         $('.invalidEmailFeedback').append(data['emailError']);
         $('#users').trigger('click');
       } catch (e) {
-        console.log(data)
+        //console.log(data)
       }
 
     }
@@ -376,7 +376,7 @@ $(document).on("click", "#submitRegister", function () {
         location.reload();
         return false;
       } catch (e) {
-        console.log(data)
+        //console.log(data)
       }
 
     }
@@ -399,7 +399,7 @@ $(document).on("click", "#addCategory", function () {
     processData: false,
     contentType: false,
     success: function (data) {
-      console.log(data);
+      //console.log(data);
       $('#categories').trigger('click');
     }
   });
@@ -421,7 +421,7 @@ $(document).on("click", "#updateCategory", function () {
     processData: false,
     contentType: false,
     success: function (data) {
-      console.log(data);
+      //console.log(data);
       $('#categories').trigger('click');
     }
   });
@@ -477,10 +477,10 @@ $(document).on("click", "#addProduct", function () {
     contentType: false,
     success: function (data) {
       try {
-        //$('#products').trigger('click');
-        console.log(data)
+        $('#products').trigger('click');
+        //console.log(data)
       } catch (e) {
-        console.log(data)
+        //console.log(data)
       }
 
     }
@@ -516,10 +516,10 @@ $(document).on("click", "#updateProduct", function () {
     contentType: false,
     success: function (data) {
       try {
-        console.log(data);
+        //console.log(data);
         $('#products').trigger('click');
       } catch (e) {
-        console.log(data)
+        //console.log(data)
       }
 
     }
@@ -558,7 +558,6 @@ $(document).on('click', '#goCategory', function () {
   $('body').empty();
   navbarLoader();
   var categoryName = $(this).parent().parent().prop('id')
-  console.log(categoryName);
   $.ajax({
     url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/listProducts.php',
     type: "POST",
@@ -587,14 +586,13 @@ $(document).on('click', '#goCategory', function () {
     }
   });
 })
-
+var product_id=''
 $(document).on('click', '#goProduct', function () {
   $('body').empty();
   navbarLoader();
   var productName = $(this).parent().children('h5').text();
-  console.log(productName);
   $.ajax({
-    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/listProducts.php',
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/getProduct.php',
     type: "POST",
     dataType: "text",
     data: {
@@ -602,7 +600,29 @@ $(document).on('click', '#goProduct', function () {
     },
     success: function (data) {
       data = JSON.parse(data);
+      product_id=data['id'];
+      console.log(product_id);
       $('body').append(productDiv);
+    }
+  });
+})
+
+
+$(document).on('click', '#vote', function () {
+  var vote=$('#rates').val();
+  var user_id = sessionStorage.getItem('id');
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/vote.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      product_id: product_id,
+      vote:vote,
+      user_id: user_id
+    },
+    success: function (data) {
+      //data = JSON.parse(data);
+      window.alert(data);
     }
   });
 })
