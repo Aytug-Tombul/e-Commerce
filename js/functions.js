@@ -587,30 +587,114 @@ $(document).on('click', '#goCategory', function () {
   });
 })
 var product_id=''
-$(document).on('click', '#goProduct', function () {
+$(document).on('click', '#goProduct', function() {
+  var productName = $(this).parent().children('h5').text();
   $('body').empty();
   navbarLoader();
-  var productName = $(this).parent().children('h5').text();
+  goProduct(productName);
+})
+
+
+
+function goProduct(name) {
+  
   $.ajax({
     url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/getProduct.php',
     type: "POST",
     dataType: "text",
     data: {
-      name: productName
+      name: name
     },
     success: function (data) {
+      $('body').append(productDiv);
       data = JSON.parse(data);
       product_id=data['id'];
-      console.log(product_id);
-      $('body').append(productDiv);
+      var totalprice=0;
+      total_price= (data.price*((100-data.sale)/100)).toFixed(2);
+     
+
+      productDetails=`<div id='product'>
+      <img src="images/`+data.profile+`" alt="panda" class="img-thumbnail"class='col-4'>
+      <p id='p_id'value='`+product_id+`'>Product ID:` +product_id + `
+      <div id='details' class='col-8'>
+      <p id='p_name' value='`+data.name+`'>Name: `+data.name+`</p>
+      <p>Description: `+data.description+`</p>
+      <p>Price: `+data.price+`</p>
+      <p>Rate: `+data.rate+`</p>
+      <p>Sale: `+data.sale+`</p>
+      <p id='p_total' value='`+total_price+`'>Total Price: `+total_price+`</p>
+      <p id='p_stock' value='`+data.stock+`'>Stock: `+data.stock+`</p>
+      <div class='row'>
+      <p id='quantity'>Quantity:</p>
+      
+      <select id="selectQuantity" name="quantity" style='margin-left : 20px'>
+                  
+      </select>
+      <p>     If you buy 3 or more you have total %15 sale</p>
+      <div class='ml-auto' id='rate'>
+      <select id="rates" name="rate" style='margin-left : 20px'>
+      <option value='1'>1</option>
+      <option value='2'>2</option>
+      <option value='3'>3</option>
+      <option value='4'>4</option>
+      <option value='5'>5</option>
+      </select>
+      <button id='vote' type="button" class="btn btn-danger">Vote</button>        
+      </div>
+      
+      </div>
+      <button id='buyProduct' type="button" class="btn btn-danger">Buy</button>
+      </div>
+      </div>`
+      
+      $('#productDetails').append(productDetails);
+      if (data.stock == 0) {
+        $('#selectQuantity').remove()
+        $('#quantity').append('  Stock empty');
+      }else{
+        for (let i = 1; i <= data.stock; i++) {
+          option = "<option value="+i+">"+i+"</option>"
+          $('#selectQuantity').append(option);
+        }
+      }
+      
+    }
+  });
+}
+
+$(document).on('click', '#buyProduct', function () {
+  var p_id=$('#p_id').attr('value')
+  var p_name=$('#p_name').attr('value')
+  var p_total=$('#p_total').attr('value')
+  var p_stock=$('#p_stock').attr('value')
+  var p_quantity=$('#selectQuantity').val();
+  var user_id = sessionStorage.getItem('id');
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/cart.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      p_id: p_id,
+      p_name:p_name,
+      p_total:p_total,
+      p_stock:p_stock,
+      p_quantity:p_quantity,
+      user_id:user_id
+    },
+    success: function (data) {
+      window.alert(data);
+      $('body').empty();
+      navbarLoader();
+      goProduct(p_name);
+      //data = JSON.parse(data);
     }
   });
 })
 
 
 $(document).on('click', '#vote', function () {
-  var vote=$('#rates').val();
   var user_id = sessionStorage.getItem('id');
+  var vote = $('#rates').val();
   $.ajax({
     url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/vote.php',
     type: "POST",
@@ -621,7 +705,7 @@ $(document).on('click', '#vote', function () {
       user_id: user_id
     },
     success: function (data) {
-      //data = JSON.parse(data);
+      
       window.alert(data);
     }
   });

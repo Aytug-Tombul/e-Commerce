@@ -2,8 +2,12 @@
 include_once 'Database.php';
 
 $db = new Database();
+if ($_POST['user_id'] == 0) {
+    echo 'Please Login for vote';
+} else {
+    vote();
+}
 
-vote();
 
 function vote()
 {
@@ -30,7 +34,7 @@ function vote()
             $db->execute();
 
 
-            $db->query("UPDATE rates SET rates.rate=(SELECT SUM(votes.value)/ COUNT(votes.value)AS rate  FROM votes WHERE votes.product_id =:product_id )WHERE rates.product_id=:product_id");
+            $db->query("UPDATE rates SET rates.rate=(SELECT SUM(cast(votes.value as double))/ COUNT(votes.value)AS rate  FROM votes WHERE votes.product_id =:product_id )WHERE rates.product_id=:product_id");
             $db->bind(':product_id', $product_id);
             $db->execute();
             echo 'Thanks for voting!';

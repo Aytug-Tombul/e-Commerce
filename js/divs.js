@@ -306,41 +306,11 @@ var cardDiv = `<div class="card-columns">
 
 
 var productDiv = `<div id="productDetails" style='margin :100px'>
-<div id='product'>
-<img src="images/panda.jpg" alt="panda" class="img-thumbnail"class='col-4'>
-<div id='details' class='col-8'>
-<p>Name:</p>
-<p>Description:</p>
-<p>Price:</p>
-<p>Rate:</p>
-<p>Sale:</p>
-<p>Total Price:</p>
-<p>Stock:</p>
-<div class='row'>
-<p>Quantity:</p>
-
-<select id="selectQuantity" name="quantity" style='margin-left : 20px'>
-            
-</select>
-<div class='ml-auto' id='rate'>
-<select id="rates" name="rate" style='margin-left : 20px'>
-<option value='1'>1</option>
-<option value='2'>2</option>
-<option value='3'>3</option>
-<option value='4'>4</option>
-<option value='5'>5</option>
-</select>
-<button id='vote' type="button" class="btn btn-danger">Vote</button>        
-</div>
-
-</div>
-<button id='buyProduct' type="button" class="btn btn-danger">Buy</button>
-</div>
-</div>
 </div>
 <div id='commentsArea'>
 <div id='comments'>
 </div>
-<div id='sendComment'></div>
+<div id='sendComment' class='d-flex justify-content-center' style='margin-bottom : 10px;' ><textarea id = "postarea" style="width: 800px; height: 150px; margin-bottom : 10px;"></textarea><br>
+<button type="button" class="btn btn-primary" id="commentBtn" style='width : 100px ; height : 50px; margin-left : 20px;'>Comment</button></div>
 </div>
 `
