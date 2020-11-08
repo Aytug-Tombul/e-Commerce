@@ -48,9 +48,10 @@ $(document).on("click", "#submitLogin", function () {
     processData: false,
     contentType: false,
     success: function (data) {
-
+      
       try {
-        data = JSON.parse(data);
+        data = JSON.parse(data)
+        console.log(data);
         $('.invalidNameFeedback').append(data['usernameError']);
         $('.invalidPasswordFeedback').append(data['passwordError']);
         if (data[username] == '') {
@@ -59,6 +60,7 @@ $(document).on("click", "#submitLogin", function () {
           sessionStorage.setItem('id', data['id'])
           sessionStorage.setItem('username', data['username'])
           sessionStorage.setItem('email', data['email']);
+          sessionStorage.setItem('role', data['role']);
           location.reload();
           return false;
         }
@@ -710,3 +712,8 @@ $(document).on('click', '#vote', function () {
     }
   });
 })
+
+$(document).on('click', '#cartBtn', function () {
+  
+
+  })

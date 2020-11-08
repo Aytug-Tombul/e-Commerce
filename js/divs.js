@@ -1,9 +1,5 @@
 window.addEventListener('load', function () {
-    if (sessionStorage.getItem('username') == null || sessionStorage.getItem('username') == '') {
-        $('body').append(navDiv);
-    } else {
-        $('body').append(loggedNavDiv);
-    }
+   navbarLoader() 
 
 })
 
@@ -11,7 +7,15 @@ function navbarLoader() {
     if (sessionStorage.getItem('username') == null || sessionStorage.getItem('username') == '') {
         $('body').append(navDiv);
     } else {
-        $('body').append(loggedNavDiv);
+        if (sessionStorage.getItem('role')=='user') {
+            $('body').append(loggedNavDiv);
+        }else {
+            $('body').append(loggedNavDiv);
+            var panelBtn=`<li id='adminPanel' class="nav-item">
+            <button class="btn btn-outline-dark my-2 my-sm-0" type="button" id='panelDiv'>Panel</button>
+            </li>`
+            $('#rightside').append(panelBtn)
+        }
     }
 }
 
@@ -53,12 +57,13 @@ var loggedNavDiv = `<nav class="navbar navbar-expand-lg navbar-light bg-light">
         </li>
 
     </ul>
-    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+    <ul id = 'rightside'class="navbar-nav ml-auto mt-2 mt-lg-0">
+
     <li class="nav-item">
             <a class="nav-link">Welcome ` + sessionStorage.getItem('username') + `</a>
         </li>
         <li class="nav-item">
-        <button class="btn btn-outline-dark my-2 my-sm-0" type="button" id='panelDiv'>Panel</button>
+        <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" id='cartBtn'>Cart</button>
         </li>
         <li class="nav-item">
         <button class="btn btn-outline-dark my-2 my-sm-0" type="submit" id='logoutBtn'>Logout</button>
@@ -314,3 +319,6 @@ var productDiv = `<div id="productDetails" style='margin :100px'>
 <button type="button" class="btn btn-primary" id="commentBtn" style='width : 100px ; height : 50px; margin-left : 20px;'>Comment</button></div>
 </div>
 `
+var shopDiv=`<div id='shoplist'>
+
+</div`

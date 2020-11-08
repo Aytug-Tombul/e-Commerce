@@ -82,12 +82,13 @@ class Database
     public function registerUser($data)
     {
         try {
-            $this->query("INSERT INTO `users` (username,password,email,profile)VALUES(:username,:password,:email,:profile)");
+            $this->query("INSERT INTO `users` (username,password,email,profile)VALUES(:username,:password,:email,:role,:profile)");
 
             //Bind values
             $this->bind(':username', $data['username']);
             $this->bind(':email', $data['email']);
             $this->bind(':password', $data['password']);
+            $this->bind(':role', 'user');
             $this->bind(':profile', $data['profile']);
             //Execute function
             $this->execute();

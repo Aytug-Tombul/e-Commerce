@@ -16,6 +16,7 @@ function login()
         'id'=>'',
         'username'=>'',
         'email'=>'',
+        'role'=>'',
         'usernameError' => '',
         'passwordError' => ''
     ];
@@ -36,6 +37,7 @@ function login()
             $backData['username']=$loggedInUser->username;
             $backData['email']=$loggedInUser->email;
             $backData['id']=$loggedInUser->id;
+            $backData['role']=$loggedInUser->role;
         } else {
             $backData['passwordError'] = 'Password or username is incorrect. Please try again.';
             
