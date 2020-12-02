@@ -26,8 +26,7 @@ $(document).on("click", "#submitRegister", function () {
         $('.invalidConfirmFeedback').append(data['confirmPasswordError']);
         $('.invalidEmailFeedback').append(data['emailError']);
         $('#loginDiv').trigger('click');
-      } catch (e) {
-      }
+      } catch (e) {}
 
     }
   });
@@ -48,7 +47,7 @@ $(document).on("click", "#submitLogin", function () {
     processData: false,
     contentType: false,
     success: function (data) {
-      
+
       try {
         data = JSON.parse(data)
         console.log(data);
@@ -460,6 +459,8 @@ $(document).on("click", "#addProduct", function () {
   var sale = $("#product_sale").val();
   var priceVal = $("#price").val();
   var stock = $("#stock").val();
+  var offer = $("#offer").val();
+  var offer_quantity = $("#offer_quantity").val();
   var productCategory = $("#selectCategories").val();
   fd.append('functionCall', 'add')
   fd.append("productName", productName);
@@ -467,6 +468,8 @@ $(document).on("click", "#addProduct", function () {
   fd.append("price", priceVal);
   fd.append("sale", sale);
   fd.append("stock", stock);
+  fd.append("offer", offer);
+  fd.append("offer_quantity", offer_quantity);
   fd.append("profile", image);
   fd.append("productCategory", productCategory);
 
@@ -480,9 +483,9 @@ $(document).on("click", "#addProduct", function () {
     success: function (data) {
       try {
         $('#products').trigger('click');
-        //console.log(data)
+        console.log(data)
       } catch (e) {
-        //console.log(data)
+        console.log(data)
       }
 
     }
@@ -570,26 +573,26 @@ $(document).on('click', '#goCategory', function () {
     success: function (data) {
       data = JSON.parse(data);
       $('body').append(cardDiv);
-      var cards=''
+      var cards = ''
       data.forEach(element => {
-        card=`
+        card = `
         <div class="card" style="width: 18rem;">
-        <img class="card-img-top" src='images/`+element.profile+`' alt="Card image cap" style=' width:100%;
+        <img class="card-img-top" src='images/` + element.profile + `' alt="Card image cap" style=' width:100%;
         height: 230px;'>
         <div class="card-body">
-          <h5 class="card-title">`+element.name+`</h5>
-          <p class="card-text">`+element.description+`</p>
+          <h5 class="card-title">` + element.name + `</h5>
+          <p class="card-text">` + element.description + `</p>
           <a class="btn btn-primary" id=goProduct>Go product</a>
         </div>
       </div>`
-      cards=cards+card
+        cards = cards + card
       });
       $('.card-columns').append(cards)
     }
   });
 })
-var product_id=''
-$(document).on('click', '#goProduct', function() {
+var product_id = ''
+$(document).on('click', '#goProduct', function () {
   var productName = $(this).parent().children('h5').text();
   $('body').empty();
   navbarLoader();
@@ -599,7 +602,7 @@ $(document).on('click', '#goProduct', function() {
 
 
 function goProduct(name) {
-  
+
   $.ajax({
     url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/getProduct.php',
     type: "POST",
@@ -610,29 +613,29 @@ function goProduct(name) {
     success: function (data) {
       $('body').append(productDiv);
       data = JSON.parse(data);
-      product_id=data['id'];
-      var totalprice=0;
-      total_price= (data.price*((100-data.sale)/100)).toFixed(2);
-     
+      product_id = data['id'];
+      var totalprice = 0;
+      total_price = (data.price * ((100 - data.sale) / 100)).toFixed(2);
 
-      productDetails=`<div id='product'>
-      <img src="images/`+data.profile+`" alt="panda" class="img-thumbnail"class='col-4'>
-      <p id='p_id'value='`+product_id+`'>Product ID:` +product_id + `
+
+      productDetails = `<div id='product'>
+      <img src="images/` + data.profile + `" alt="panda" class="img-thumbnail"class='col-4'>
+      <p id='p_id'value='` + product_id + `'>Product ID:` + product_id + `
       <div id='details' class='col-8'>
-      <p id='p_name' value='`+data.name+`'>Name: `+data.name+`</p>
-      <p>Description: `+data.description+`</p>
-      <p>Price: `+data.price+`</p>
-      <p>Rate: `+data.rate+`</p>
-      <p>Sale: `+data.sale+`</p>
-      <p id='p_total' value='`+total_price+`'>Total Price: `+total_price+`</p>
-      <p id='p_stock' value='`+data.stock+`'>Stock: `+data.stock+`</p>
+      <p id='p_name' value='` + data.name + `'>Name: ` + data.name + `</p>
+      <p>Description: ` + data.description + `</p>
+      <p>Price: ` + data.price + `</p>
+      <p>Rate: ` + data.rate + `</p>
+      <p>Sale: ` + data.sale + `</p>
+      <p id='p_total' value='` + total_price + `'>Total Price: ` + total_price + `</p>
+      <p id='p_stock' value='` + data.stock + `'>Stock: ` + data.stock + `</p>
       <div class='row'>
       <p id='quantity'>Quantity:</p>
       
       <select id="selectQuantity" name="quantity" style='margin-left : 20px'>
                   
       </select>
-      <p>     If you buy 3 or more you have total %15 sale</p>
+      <p>OFFER: If you buy ` + data.offer_quantity + ` : %` + data.offer + ` sale </p>
       <div class='ml-auto' id='rate'>
       <select id="rates" name="rate" style='margin-left : 20px'>
       <option value='1'>1</option>
@@ -648,28 +651,56 @@ function goProduct(name) {
       <button id='buyProduct' type="button" class="btn btn-danger">Buy</button>
       </div>
       </div>`
-      
+
       $('#productDetails').append(productDetails);
       if (data.stock == 0) {
         $('#selectQuantity').remove()
         $('#quantity').append('  Stock empty');
-      }else{
+      } else {
         for (let i = 1; i <= data.stock; i++) {
-          option = "<option value="+i+">"+i+"</option>"
+          option = "<option value=" + i + ">" + i + "</option>"
           $('#selectQuantity').append(option);
         }
       }
-      
+      getComments(product_id);
+    }
+  });
+}
+
+function getComments(p_id){
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/getComments.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      product_id: p_id,
+    },
+    success: function (data) {
+      data=JSON.parse(data)
+      data.forEach(element => {
+        var commentDiv=`<div class="card">
+        <div class="card-header">
+          `+element.username+`
+        </div>
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <p>`+element.post+`</p>
+          </blockquote>
+        </div>
+      </div>`
+      $('#comments').append(commentDiv);
+      });
+      console.log(data)
     }
   });
 }
 
 $(document).on('click', '#buyProduct', function () {
-  var p_id=$('#p_id').attr('value')
-  var p_name=$('#p_name').attr('value')
-  var p_total=$('#p_total').attr('value')
-  var p_stock=$('#p_stock').attr('value')
-  var p_quantity=$('#selectQuantity').val();
+  var p_id = $('#p_id').attr('value')
+  var p_name = $('#p_name').attr('value')
+  var p_total = $('#p_total').attr('value')
+  var p_stock = $('#p_stock').attr('value')
+  var p_quantity = $('#selectQuantity').val();
   var user_id = sessionStorage.getItem('id');
   $.ajax({
     url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/cart.php',
@@ -677,11 +708,11 @@ $(document).on('click', '#buyProduct', function () {
     dataType: "text",
     data: {
       p_id: p_id,
-      p_name:p_name,
-      p_total:p_total,
-      p_stock:p_stock,
-      p_quantity:p_quantity,
-      user_id:user_id
+      p_name: p_name,
+      p_total: p_total,
+      p_stock: p_stock,
+      p_quantity: p_quantity,
+      user_id: user_id
     },
     success: function (data) {
       window.alert(data);
@@ -703,17 +734,108 @@ $(document).on('click', '#vote', function () {
     dataType: "text",
     data: {
       product_id: product_id,
-      vote:vote,
+      vote: vote,
       user_id: user_id
     },
     success: function (data) {
-      
+
       window.alert(data);
     }
   });
 })
 
 $(document).on('click', '#cartBtn', function () {
-  
+  $('body').empty()
+  navbarLoader();
+  $('body').append(shopDiv);
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/cartList.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      user_id: sessionStorage.getItem('id')
+    },
+    success: function (data) {
+      data = JSON.parse(data);
+      console.log(data)
+      var totalCart = 0;
+      data.forEach(element => {
+        totalProduct = 0;
+        totalProduct = (element.product_total * element.product_quantity).toFixed(2);
+
+
+
+
+        selectedProduct = `<div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title" id="` + element.product_id + `">` + element.product_name + `</h5>
+          <p class="card-text">Quantity: ` + element.product_quantity + `   sale_price: ` + element.product_total + `   total : ` + totalProduct + `</p>
+          <button id='remove' type="button" class="btn btn-danger">Remove</button>
+        </div>
+      </div>`
+        $('#shoplist').append(selectedProduct);
+        totalCart = parseFloat(totalCart) + parseFloat(totalProduct);
+      });
+      $('#total_price').append(totalCart.toFixed(2));
+    }
 
   })
+})
+
+$(document).on('click', '#remove', function () {
+  var removeID = $(this).parent().children('h5').attr('id');
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/removeCart.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      product_id: removeID,
+      user_id: sessionStorage.getItem('id')
+    },
+    success: function (data) {
+      window.alert('Product Removed !');
+      $('#cartBtn').trigger('click')
+      console.log(data)
+    }
+  });
+})
+
+
+$(document).on('click', '#buyCart', function () {
+
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/buyCart.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      user_id: sessionStorage.getItem('id'),
+    },
+    success: function (data) {
+      window.alert('Buy Complete');
+      $('#cartBtn').trigger('click')
+      console.log(data)
+    }
+  });
+})
+
+$(document).on('click', '#commentBtn', function () {
+  var post = $('#postarea').val();
+  var name = $('#p_name').attr('value')
+  $.ajax({
+    url: '/e-Commerce/e-Commerce-first-MVC-tutorial-/php/comment.php',
+    type: "POST",
+    dataType: "text",
+    data: {
+      p_id: product_id,
+      user_id: sessionStorage.getItem('id'),
+      post: post
+    },
+    success: function (data) {
+      console.log(data)
+      $('#productDetails').remove()
+      $('#commentsArea').remove()
+      goProduct(name)
+      window.alert('Comment Sended');
+    }
+  });
+})

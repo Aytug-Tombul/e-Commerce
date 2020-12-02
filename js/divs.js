@@ -174,6 +174,8 @@ var addProductDiv = `<div class="container-register">
         <input type="text" placeholder="Price *" id="price">
         <input type="text" placeholder="Sale" id="product_sale">
         <input type="text" placeholder="stock *" id="stock">
+        <input type="text" placeholder="OFFER" id="offer">
+        <input type="text" placeholder="Offer quantity *" id="offer_quantity">
         <p>Product Image</p>
         <input type="file" class="form-control" id="image" style="font-size: 14px;">
         <p>Product Category</p>
@@ -319,6 +321,9 @@ var productDiv = `<div id="productDetails" style='margin :100px'>
 <button type="button" class="btn btn-primary" id="commentBtn" style='width : 100px ; height : 50px; margin-left : 20px;'>Comment</button></div>
 </div>
 `
-var shopDiv=`<div id='shoplist'>
-
-</div`
+var shopDiv=`<div id='shoplist' class="d-flex justify-content-center" style=' width :900px'>
+</div>
+<div id='total' class="d-flex justify-content-center">
+<p id='total_price' style ='padding-right:10px'>Total price : </p>
+<button id='buyCart' type="button" class="btn btn-danger">Buy Cart</button>
+</div>`

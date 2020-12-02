@@ -37,7 +37,10 @@ function addProduct()
             'sale' => $_POST['sale'],
             'stock' => $_POST['stock'],
             'profile' => $profile,
-            'category' => trim($_POST['productCategory'])
+            'category' => trim($_POST['productCategory']),
+            'offer' => $_POST['offer'],
+            'offer_quantity' => $_POST['offer_quantity'],
+
         ];
 
         $db->query("SELECT `id` FROM `categories` WHERE name = :category ");
@@ -45,8 +48,8 @@ function addProduct()
         $cateID = $db->single();
 
 
-        $db->query("INSERT INTO `products` (name,description,price,stock,sale,category_ID,profile)
-        VALUES(:name,:description,:price,:stock,:sale,:categoryID,:profile);
+        $db->query("INSERT INTO `products` (name,description,price,stock,sale,category_ID,offer,offer_quantity,profile)
+        VALUES(:name,:description,:price,:stock,:sale,:categoryID,:offer,:offer_quantity,:profile);
         ");
 
         //Bind values
@@ -56,6 +59,8 @@ function addProduct()
         $db->bind(':stock', $data['stock']);
         $db->bind(':sale', $data['sale']);
         $db->bind(':categoryID', $cateID->id);
+        $db->bind(':offer', $data['offer']);
+        $db->bind(':offer_quantity', $data['offer_quantity']);
         $db->bind(':profile', $data['profile']);
         $db->execute();
 
@@ -95,21 +100,23 @@ function updateProduct()
             $profile = null;
         }
         $data = [
-            'id' => $_POST['id'],
             'name' => $_POST['productName'],
             'description' => $_POST['description'],
             'price' => $_POST['price'],
             'sale' => $_POST['sale'],
             'stock' => $_POST['stock'],
             'profile' => $profile,
-            'category' => $_POST['productCategory']
+            'category' => trim($_POST['productCategory']),
+            'offer' => $_POST['offer'],
+            'offer_quantity' => $_POST['offer_quantity'],
+
         ];
 
         $db->query("SELECT `id` FROM `categories` WHERE name =:category");
         $db->bind(':category', $data['category']);
         $cateID = $db->execute();
 
-        $db->query("UPDATE `products` SET `name` = :name , `description`=:description, `price`=:price , `stock`=:stock , `sale`= :sale , `category_ID`=:categoryID, `profile`=:profile  WHERE `products`.`id` = :id ");
+        $db->query("UPDATE `products` SET `name` = :name , `description`=:description, `price`=:price , `stock`=:stock , `sale`= :sale , `category_ID`=:categoryID,`offer`=:offer,`offer_quantity`=:offer_quantity , `profile`=:profile  WHERE `products`.`id` = :id ");
 
         //Bind values
         $db->bind(':id', $data['id']);
@@ -119,6 +126,8 @@ function updateProduct()
         $db->bind(':stock', $data['stock']);
         $db->bind(':sale', $data['sale']);
         $db->bind(':categoryID', $cateID);
+        $db->bind(':offer', $data['offer']);
+        $db->bind(':offer_quantity', $data['offer_quantity']);
         $db->bind(':profile', $data['profile']);
         //Execute function
         $db->execute();

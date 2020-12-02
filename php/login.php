@@ -38,6 +38,10 @@ function login()
             $backData['email']=$loggedInUser->email;
             $backData['id']=$loggedInUser->id;
             $backData['role']=$loggedInUser->role;
+            $_SESSION['username']=$loggedInUser->username;
+            $_SESSION['email']=$loggedInUser->email;
+            $_SESSION['id']=$loggedInUser->id;
+            $_SESSION['role']=$loggedInUser->role;
         } else {
             $backData['passwordError'] = 'Password or username is incorrect. Please try again.';
             

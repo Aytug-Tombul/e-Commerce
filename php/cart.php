@@ -22,6 +22,7 @@ function cartAdd()
         $db->query('SELECT * FROM carts WHERE user_id=:user_id');
         $db->bind(':user_id', $data['user_id']);
         $cart = $db->single();
+        $here= false;
         if ($db->rowCount() > 0) {
             $cart = $cart->select_products;
             $cart = json_decode($cart);
@@ -37,8 +38,11 @@ function cartAdd()
             if ($here == true) {
 
                 $last = json_encode($cart);
-                $db->query("UPDATE carts,products SET carts.select_products = :products_json, products.stock=" . ($data['p_stock'] - $data['p_quantity']) . " WHERE carts.user_id =" . $data['user_id'] . " AND products.id =" . $data['p_id'] . ";");
+                $db->query("UPDATE carts,products SET carts.select_products = :products_json, products.stock= :product_stock WHERE carts.user_id =:user_id AND products.id =:p_id ;");
                 $db->bind(':products_json', $last);
+                $db->bind(':products_stock', ($data['p_stock'] - $data['p_quantity']));
+                $db->bind(':user_id', $data['user_id']);
+                $db->bind(':p_id', $data['p_id']);
                 $db->execute();
                 echo 'There was in the basket ' . $data['p_quantity'] . ' more added';
             } else {
@@ -46,10 +50,12 @@ function cartAdd()
                 $products_json = json_decode($products_json);
                 array_push($cart, $products_json);
                 $cart = json_encode($cart);
-                $db->query("UPDATE carts SET select_products = :products_json");
+                $db->query("UPDATE carts SET select_products = :products_json WHERE user_id=:user_id");
+                $db->bind(':user_id', $data['user_id']);
                 $db->bind(':products_json', $cart);
                 $db->execute();
-                $db->query("UPDATE products SET stock = :stock");
+                $db->query("UPDATE products SET stock = :stock WHERE id = :product_id");
+                $db->bind(':product_id', $data['p_id']);
                 $db->bind(':stock', $data['p_stock']-$data['p_quantity']);
                 $db->execute();
                 echo 'added to cart.';
@@ -61,7 +67,8 @@ function cartAdd()
             $db->bind(':user_id', $data['user_id']);
             $db->bind(':products_json', $products_json);
             $db->execute();
-            $db->query("UPDATE products SET stock = :stock");
+            $db->query("UPDATE products SET stock = :stock WHERE id = :product_id");
+            $db->bind(':product_id', $data['p_id']);
             $db->bind(':stock', $data['p_stock']-$data['p_quantity']);
             $db->execute();
             echo 'added to cart';
